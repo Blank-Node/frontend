@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import { Flex, Divider, Space, Typography } from 'antd'
 import { MailOutlined, LinkedinOutlined } from '@ant-design/icons'
-import AnimatedLines from '../Viz/AnimatedLines'
 
 const { Text, Title } = Typography
 
@@ -18,10 +17,8 @@ const Branding: FC<any> = ({ children }) => {
           marginBlock: 0
         }}>{'Blank Node'}</Title>
       </Flex>
-      {/* {children} */}
-      <div style={{ height: window.innerHeight - 160 }}>
-        <AnimatedLines />
-      </div>
+      
+      {children}
 
       <div style={{ bottom: 0 }}>
         <Divider style={{ border: '1px solid grey' }}/>
