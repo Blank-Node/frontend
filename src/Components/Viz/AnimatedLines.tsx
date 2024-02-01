@@ -10,12 +10,12 @@ interface Vectors {
   vy: number;
 }
 interface State {
-  [index: string]: Vectors[] | Points[] | boolean;
+  [index: string]: Vectors[] | Points[] | number | null;
 
   points: Points[];
   current: Vectors[];
   previous: Vectors[];
-  paused: boolean;
+  index: number | null;
 }
 interface Action{
   [index: string]: string | number | boolean | HTMLCanvasElement | undefined | null;
@@ -103,33 +103,42 @@ function reducer(state: State, action: Action) {
     }
     return {
       ...state,
-      previous: state.paused ? state.previous : [...state.current],
+      previous: state.index !== null ? state.previous : [...state.current],
     }
   } else if (action.type === 'pause') {
-
     return {
       ...state,
-      current: state.current.map(() => ({ vx: 0, vy: 0})),
-      paused: true
+      current: state.current.map((v, i) => {
+        if (i === action.i) {
+          return { vx: 0, vy: 0 }
+        }
+        return v
+      }),
+      index: Number(action.i)
     }
   } else if (action.type === 'resume') {    
     return {
       ...state,
-      current: state.previous.map((v) => ({ vx: v.vx, vy: v.vy })),
-      paused: false
+      current: state.previous.map((v, i) => {
+        if (i === state.index) {
+          return { vx: v.vx, vy: v.vy }
+        }
+        return v
+      }),
+      index: null
     }
   } else {
     return state
   }
 }
 
-const AnimatedLines = ({ numPoints=6, radius=300, buffer=200 }) => {
+const AnimatedLines = ({ numPoints=6, radius=100 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const initState: State = {
     points: [],
     current: randomVecs(numPoints),
     previous: [],
-    paused: false
+    index: null,
   }
   const [state, dispatch] = useReducer(reducer,initState)
   
@@ -147,7 +156,6 @@ const AnimatedLines = ({ numPoints=6, radius=300, buffer=200 }) => {
       }; 
       animate();
     }
-      
     // Cleanup
     return () => {};
   }, []); 
@@ -160,26 +168,21 @@ const AnimatedLines = ({ numPoints=6, radius=300, buffer=200 }) => {
     const mouseY = event.clientY - canvasRect.top;    
 
     if (Boolean(state.points.length)) {
-      if (!state.paused) {
+      if (state.index === null) {
         for (let i = 0; i < numPoints; i++) {
           const distance = Math.sqrt(Math.pow(mouseX - state.points[i].x, 2) + Math.pow(mouseY - state.points[i].y, 2));
           if (distance <= radius ) {  
-            dispatch({type: 'pause'})
+            dispatch({type: 'pause', i})
             break;
           } 
         }
       } else {
-        const distances = []
-        for (let i = 0; i < numPoints; i++) {
-          const distance = Math.sqrt(Math.pow(mouseX - state.points[i].x, 2) + Math.pow(mouseY - state.points[i].y, 2));
-          if (distance > radius + buffer ) {  
-            dispatch({type: 'resume'})
-            break;
-          } 
+        const distance = Math.sqrt(Math.pow(mouseX - state.points[state.index].x, 2) + Math.pow(mouseY - state.points[state.index].y, 2));
+        if (distance > radius ) { 
+          dispatch({type: 'resume'})
         }
       }
     }
-
   };
 
   return <canvas id={'2dCanvas'} className='full-size' ref={canvasRef} onMouseMove={handleMouseMove}/>
