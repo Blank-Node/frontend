@@ -7,7 +7,7 @@ function App() {
   return (
     <>
       <Branding>
-        <div style={{ height: window.innerHeight - 160 }}>
+        <div style={{ height: window.innerHeight - 60 }}>
           <AnimatedLines />
         </div>
       </Branding>

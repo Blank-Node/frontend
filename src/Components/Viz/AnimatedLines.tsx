@@ -73,10 +73,10 @@ function reducer(state: State, action: Action) {
         state.points[i].y += state.current[i].vy
 
         // Bounce off walls
-        if (point.x < 0 || point.x > width - 60) {
+        if (point.x < 0 || point.x > width) {
           state.current[i].vx *= -1;
         }
-        if (point.y < 0 || point.y > height - 60) {
+        if (point.y < 0 || point.y > height) {
           state.current[i].vy *= -1;
         }
       });
