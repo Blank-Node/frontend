@@ -137,13 +137,7 @@ const AnimatedLines = ({ numPoints=6, radius=80, buffer=40 }) => {
   }, [])
   
   useEffect(() => {
-    if (canvasRef.current) {
-      const canvas = canvasRef.current;
-      
-      // Set canvas size to window size
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      
+    if (canvasRef.current) {      
       const animate = () => {
         requestAnimationFrame(animate);
         dispatch({type: 'move', canvas: canvasRef.current})
@@ -184,7 +178,7 @@ const AnimatedLines = ({ numPoints=6, radius=80, buffer=40 }) => {
 
   };
 
-  return <canvas id={'2dCanvas'} ref={canvasRef} onMouseMove={handleMouseMove}/>
+  return <canvas id={'2dCanvas'} className='full-size' ref={canvasRef} onMouseMove={handleMouseMove}/>
 };
 
 export default AnimatedLines
