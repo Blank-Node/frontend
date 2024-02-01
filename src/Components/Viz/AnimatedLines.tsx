@@ -62,21 +62,16 @@ function reducer(state: State, action: Action) {
       ...state,
       points: randomPoints(action.number, action.canvas)
     }
-  } else if (action.type === 'move') {
-    const pts: Points[] = []
-    
+  } else if (action.type === 'move') {    
     if (action.canvas) {
       const width = action.canvas.width
       const height = action.canvas.height
       const ctx = action.canvas.getContext('2d');
       
       state.points.forEach((point, i) => {
-        pts.push({
-          ...point,
-          x: point.x + state.current[i].vx,
-          y: point.y + state.current[i].vy,
-        })
-        
+        state.points[i].x += state.current[i].vx
+        state.points[i].y += state.current[i].vy
+
         // Bounce off walls
         if (point.x < 0 || point.x > width - 60) {
           state.current[i].vx *= -1;
@@ -84,7 +79,6 @@ function reducer(state: State, action: Action) {
         if (point.y < 0 || point.y > height - 60) {
           state.current[i].vy *= -1;
         }
-
       });
 
       if (ctx) {
@@ -108,10 +102,7 @@ function reducer(state: State, action: Action) {
       }
     }
 
-    return {
-      ...state,
-      points: pts
-    }
+    return state
   } else if (action.type === 'bounce') {
     return {
       ...state
@@ -146,9 +137,8 @@ const AnimatedLines = ({ numPoints=6, radius=80, buffer=40 }) => {
   }, [])
   
   useEffect(() => {
-    if (canvasRef.current && Boolean(state.points.length) && Boolean(state.current.length)) {
+    if (canvasRef.current) {
       const canvas = canvasRef.current;
-      const ctx = canvas.getContext('2d');
       
       // Set canvas size to window size
       canvas.width = window.innerWidth;
