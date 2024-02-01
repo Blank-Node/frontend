@@ -7,7 +7,7 @@ function App() {
     <>
       <Branding>
         <div>
-          <a href="https://blanknode.dev" target="_blank">
+          <a href="https://www.linkedin.com/company/blank-node/" target="_blank">
             <img src={'./img/BN__icon_300.png'} className="logo" alt="Blank Node" />
           </a>
         </div>
