@@ -102,18 +102,32 @@ function reducer(state: State, action: Action) {
       }
     }
 
-    return state
-  } else if (action.type === 'bounce') {
     return {
-      ...state
+      ...state,
+      previous: state.paused ? state.previous : [...state.current],
     }
   } else if (action.type === 'pause') {
+    console.log('PREVIOUS ---', state.previous);
+    console.log('current ---', state.previous);
+    
+    state.current.forEach((vec, i) => {
+      state.current[i].vx  = 0
+      state.current[i].vy  = 0
+    })
+
     return {
-      ...state
+      ...state,
+      paused: true
     }
   } else if (action.type === 'resume') {
+    console.log('ROCK OOOON!!');
+    state.current.forEach((vec, i) => {
+      state.current[i]  = state.previous[i]
+    })
+    
     return {
-      ...state
+      ...state,
+      paused: false
     }
   } else {
     return state
@@ -156,25 +170,25 @@ const AnimatedLines = ({ numPoints=6, radius=80, buffer=40 }) => {
     const mouseX = event.clientX - canvasRect.left;
     const mouseY = event.clientY - canvasRect.top;    
 
-    // if (Boolean(state.points.length)) {
-    //   if (!state.paused) {
-    //     for (let i = 0; i < numPoints; i++) {
-    //       const distance = Math.sqrt(Math.pow(mouseX - points[i].x, 2) + Math.pow(mouseY - points[i].y, 2));
-    //       if (distance <= radius ) {    
-    //         vectRef.current.forEach(vector => {
-    //           vector.vx = 0
-    //           vector.vy = 0
-    //         })          
-            
-    //         console.log(vectRef.current);
-    //         console.log('PREV ----',vectPrevRef.current);
-            
-    //         break;
-    //       } 
-    //     }
-    //   } else { console.log('paused', vectRef.current === vectPrevRef.current);
-    //   }
-    // }
+    if (Boolean(state.points.length)) {
+      if (!state.paused) {
+        for (let i = 0; i < numPoints; i++) {
+          const distance = Math.sqrt(Math.pow(mouseX - state.points[i].x, 2) + Math.pow(mouseY - state.points[i].y, 2));
+          if (distance <= radius ) {  
+            dispatch({type: 'pause'})
+            break;
+          } 
+        }
+      } else {
+        for (let i = 0; i < numPoints; i++) {
+          const distance = Math.sqrt(Math.pow(mouseX - state.points[i].x, 2) + Math.pow(mouseY - state.points[i].y, 2));
+          if (distance > radius + buffer ) {  
+            dispatch({type: 'resume'})
+            break;
+          } 
+        }
+      }
+    }
 
   };
 
