@@ -1,16 +1,16 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
 .logo {
   height: 18em;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
+
+.logo-small {
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 0 0.8em #5b5b5b77;
+}
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #5b5b5baa);
 }
@@ -21,6 +21,10 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.full {
+  width: 100%;
 }
 
 .full-size {

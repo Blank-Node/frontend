@@ -132,7 +132,7 @@ function reducer(state: State, action: Action) {
   }
 }
 
-const AnimatedLines = ({ numPoints=6, radius=100 }) => {
+const AnimatedLines = ({ numPoints=7, radius=100 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const initState: State = {
     points: [],
