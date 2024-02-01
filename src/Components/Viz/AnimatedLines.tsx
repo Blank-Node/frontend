@@ -101,32 +101,21 @@ function reducer(state: State, action: Action) {
         }
       }
     }
-
     return {
       ...state,
       previous: state.paused ? state.previous : [...state.current],
     }
   } else if (action.type === 'pause') {
-    console.log('PREVIOUS ---', state.previous);
-    console.log('current ---', state.previous);
-    
-    state.current.forEach((vec, i) => {
-      state.current[i].vx  = 0
-      state.current[i].vy  = 0
-    })
 
     return {
       ...state,
+      current: state.current.map(() => ({ vx: 0, vy: 0})),
       paused: true
     }
-  } else if (action.type === 'resume') {
-    console.log('ROCK OOOON!!');
-    state.current.forEach((vec, i) => {
-      state.current[i]  = state.previous[i]
-    })
-    
+  } else if (action.type === 'resume') {    
     return {
       ...state,
+      current: state.previous.map((v) => ({ vx: v.vx, vy: v.vy })),
       paused: false
     }
   } else {
@@ -134,7 +123,7 @@ function reducer(state: State, action: Action) {
   }
 }
 
-const AnimatedLines = ({ numPoints=6, radius=80, buffer=40 }) => {
+const AnimatedLines = ({ numPoints=6, radius=300, buffer=200 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const initState: State = {
     points: [],
@@ -180,6 +169,7 @@ const AnimatedLines = ({ numPoints=6, radius=80, buffer=40 }) => {
           } 
         }
       } else {
+        const distances = []
         for (let i = 0; i < numPoints; i++) {
           const distance = Math.sqrt(Math.pow(mouseX - state.points[i].x, 2) + Math.pow(mouseY - state.points[i].y, 2));
           if (distance > radius + buffer ) {  
