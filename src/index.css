@@ -9,12 +9,11 @@ body {
 }
 
 #root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif !important;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  color: rgba(255, 255, 255, 0.87) !important;
 
   padding: 1em;
   margin: 0;
@@ -34,12 +33,12 @@ body {
 }
 
 a {
-  font-weight: 500;
-  color: #21706f;
-  text-decoration: inherit;
+  font-weight: 500 !important;
+  color: #21706f !important;
+  text-decoration: inherit !important;
 }
 a:hover {
-  color: #a6dace;
+  color: #a6dace !important;
 }
 
 h1 {
