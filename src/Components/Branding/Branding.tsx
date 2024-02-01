@@ -22,7 +22,7 @@ const Branding: FC<any> = ({ children }) => {
 
       <div style={{ bottom: 0 }}>
         <Divider style={{ border: '1px solid grey' }}/>
-        <Flex justify='space-between' style={{ color: 'grey' }}>
+        <Flex justify='space-between' style={{ color: 'grey' }} wrap='wrap'>
           <Text style={{
             fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
             color: 'lightGrey',
