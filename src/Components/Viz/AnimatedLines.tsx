@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useReducer } from 'react';
 
-const activities = ['Web Developement', 'Parametric Design', 'CIM - City Information Modelling', 'Programming with BIM', 'Consultancy']
+const activities = ['Web Developement', 'Computational Design', 'CIM - City Information Modelling', 'BIM Programming', 'Consultancy', 'Software Development']
 
 interface Points {
   x: number;
