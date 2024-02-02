@@ -140,6 +140,7 @@ function reducer(state: State, action: Action) {
       tag.style.borderRadius = '8px'
       // tag.style.boxShadow = '0 0 0.4em #5b5b5b99'
       tag.style.fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif'
+      tag.style.fontSize = '1.2rem'
       tag.style.textAlign = 'center'
 
       tag.textContent = activities[Number(action.i)]
