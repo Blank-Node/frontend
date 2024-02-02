@@ -1,5 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useReducer } from 'react';
 
+const activities = ['Web Developement', 'Parametric Design', 'CIM - City Information Modelling', 'Programming with BIM', 'Consultancy']
+
 interface Points {
   x: number;
   y: number;
@@ -106,6 +108,44 @@ function reducer(state: State, action: Action) {
       previous: state.index !== null ? state.previous : [...state.current],
     }
   } else if (action.type === 'pause') {
+    const tag = document.createElement('div')
+    if (tag) {
+      let cLeft = 0
+      let cTop = 0
+      const width = 200
+      const height = 40
+
+      if (action.canvas) {
+        const canvasRect = action.canvas.getBoundingClientRect();
+        cLeft = canvasRect.left
+        cTop = canvasRect.top
+      }
+
+      let spaceLeft = state.points[Number(action.i)].x - cLeft - width/2
+      let spaceAbove = state.points[Number(action.i)].y - cTop 
+
+      if (spaceAbove >= height + 12) {
+        spaceAbove -= height
+      }
+
+      tag.id = 'tempTag'
+      tag.style.position = 'absolute'
+      tag.style.left = `${spaceLeft}px`
+      tag.style.top = `${spaceAbove}px`
+      // tag.style.width = `${width}px`
+      // tag.style.height = `${height}px`
+      tag.style.background = '#21706f55'
+      tag.style.color = 'lightGrey'
+      tag.style.padding= '8px 12px'
+      tag.style.borderRadius = '8px'
+      // tag.style.boxShadow = '0 0 0.4em #5b5b5b99'
+      tag.style.fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif'
+      tag.style.textAlign = 'center'
+
+      tag.textContent = activities[Number(action.i)]
+      document.body.appendChild(tag)
+    }
+
     return {
       ...state,
       current: state.current.map((v, i) => {
@@ -116,7 +156,10 @@ function reducer(state: State, action: Action) {
       }),
       index: Number(action.i)
     }
-  } else if (action.type === 'resume') {    
+  } else if (action.type === 'resume') { 
+    const tag = document.getElementById('tempTag')
+    tag?.remove()
+
     return {
       ...state,
       current: state.previous.map((v, i) => {
@@ -132,7 +175,7 @@ function reducer(state: State, action: Action) {
   }
 }
 
-const AnimatedLines = ({ numPoints=7, radius=100 }) => {
+const AnimatedLines = ({ numPoints=activities.length, radius=100 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const initState: State = {
     points: [],
@@ -161,18 +204,19 @@ const AnimatedLines = ({ numPoints=7, radius=100 }) => {
   }, []); 
   
   const handleMouseMove = (event: any) => {
-    // console.log(event)
+    // const tag = document.getElementById('ghostPointTag')
+    
     const canvas = event.target;
     const canvasRect = canvas.getBoundingClientRect();
     const mouseX = event.clientX - canvasRect.left;
     const mouseY = event.clientY - canvasRect.top;    
-
+    
     if (Boolean(state.points.length)) {
       if (state.index === null) {
         for (let i = 0; i < numPoints; i++) {
           const distance = Math.sqrt(Math.pow(mouseX - state.points[i].x, 2) + Math.pow(mouseY - state.points[i].y, 2));
           if (distance <= radius ) {  
-            dispatch({type: 'pause', i})
+            dispatch({type: 'pause', canvas: canvas, i})
             break;
           } 
         }
@@ -185,7 +229,12 @@ const AnimatedLines = ({ numPoints=7, radius=100 }) => {
     }
   };
 
-  return <canvas id={'2dCanvas'} className='full-size' ref={canvasRef} onMouseMove={handleMouseMove}/>
+  return (
+    <>
+      <canvas id={'2dCanvas'} className='full-size' ref={canvasRef} onMouseMove={handleMouseMove}/>
+      {/* <div id='ghostPointTag' style={{overflow: 'hidden', background: 'grey', padding: 8 }}>test</div> */}
+    </>
+  )
 };
 
 export default AnimatedLines
